@@ -10,8 +10,9 @@ load_dotenv(BASE_DIR / '.env')
 SECRET_KEY = os.getenv('SECRET_KEY', 'dev-local-secret-key-change-this-value-1234567890')
 DEBUG = os.getenv('DEBUG', 'True').lower() == 'true'
 ALLOWED_HOSTS = ['*']
-CSRF_TRUSTED_ORIGINS = [o.strip() for o in os.getenv('CSRF_TRUSTED_ORIGINS', '').split(',') if o.strip()]
-
+CSRF_TRUSTED_ORIGINS = [
+    "https://tutorvirtual-ramirezanderson-sanchezluis.onrender.com"
+]
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
