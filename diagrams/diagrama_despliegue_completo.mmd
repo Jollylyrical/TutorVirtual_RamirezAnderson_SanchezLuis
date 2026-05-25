@@ -1,0 +1,24 @@
+flowchart TB
+    U[Usuario / Cliente\nNavegador Web Chrome, Edge, Movil]
+    I((Internet / localhost))
+    subgraph APP[Aplicacion Tutor Virtual]
+        D[Aplicacion Web Django\nFrontend HTML/CSS/JS\nDashboards por rol]
+        G[Servidor WSGI/ASGI\nGunicorn / Uvicorn\nBackend Python]
+        A[API REST\nDjango REST Framework\nJSON + JWT]
+    end
+    P[(PostgreSQL / SQLite\nBD Relacional)]
+    M[(MongoDB Atlas / Local\nBD Semantica Documental)]
+    N8N[n8n Automation Server\nWebhook tutor-virtual-ai]
+    IA((GroqCloud API gratuita/experimental\nllama-3.1-8b-instant))
+
+    U -- TCP/IP HTTP/HTTPS --> I
+    I -- HTTP localhost:8000 o HTTPS --> D
+    D -- WSGI/ASGI --> G
+    G -- REST interno JSON --> A
+    A -- SQL Protocol --> P
+    A -- MongoDB Protocol / BSON --> M
+    A -- HTTP POST JSON + X-Tutor-Secret --> N8N
+    N8N -- HTTPS REST API + Bearer GROQ_API_KEY --> IA
+    IA -- JSON completions --> N8N
+    N8N -- JSON answer --> A
+    A -- Respuesta renderizada + historial --> D

@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard Administrador{% endblock %}
+{% block shell_title %}Centro de control administrativo{% endblock %}
+{% block content %}
+<section class="dashboard-header admin-gradient">
+    <div>
+        <span class="eyebrow">{{ role_display }}</span>
+        <h1>Centro de control del sistema</h1>
+        <p>Supervisión integral de usuarios, auditoría, repositorio, API, protocolos de comunicación y servicios conectados.</p>
+    </div>
+</section>
+{% include 'core/_stats.html' %}
+{% include 'core/_quick_actions.html' %}
+<section class="grid two">
+    <article class="card">
+        <div class="pill green">Operación</div>
+        <h2>Estado de servicios</h2>
+        <div class="knowledge-map">
+            <div class="map-node"><strong>Web</strong><span>Django Templates, sesiones y vistas protegidas por login.</span></div>
+            <div class="map-node"><strong>API</strong><span>REST/JSON con JWT Bearer Token para consumo seguro.</span></div>
+            <div class="map-node"><strong>Datos</strong><span>{{ stats.db_engine }} + {% if stats.mongo_status %}MongoDB activo{% else %}fallback SQL local{% endif %}.</span></div>
+        </div>
+    </article>
+    <article class="card">
+        <div class="pill orange">Auditoría</div>
+        <h2>Eventos recientes</h2>
+        {% if latest_audits %}
+            <div class="mini-list">
+            {% for audit in latest_audits %}
+                <div>
+                    <strong>{{ audit.action }}</strong>
+                    <span>{{ audit.document.title }} · {{ audit.user.username|default:'sistema' }} · {{ audit.created_at|date:'d/m/Y H:i' }}</span>
+                </div>
+            {% endfor %}
+            </div>
+        {% else %}<p class="muted">Sin eventos de auditoría todavía.</p>{% endif %}
+    </article>
+</section>
+<section class="card">
+    <div class="pill">Protocolos UML aplicados</div>
+    <h2>Ruta técnica de una consulta</h2>
+    <div class="protocol-pipeline">
+        <div class="protocol-step"><strong>1. Cliente</strong><span>Navegador web mediante TCP/IP y HTTPS.</span></div>
+        <div class="protocol-step"><strong>2. Reverse proxy</strong><span>Nginx con TLS/SSL 1.2/1.3 y certificado.</span></div>
+        <div class="protocol-step"><strong>3. Aplicación</strong><span>Django servido por Gunicorn/Uvicorn vía WSGI/ASGI.</span></div>
+        <div class="protocol-step"><strong>4. Datos e IA</strong><span>SQL, BSON, REST/JSON, JWT y API Key.</span></div>
+    </div>
+</section>
+{% include 'core/_dashboard_tables.html' %}
+{% endblock %}

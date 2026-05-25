@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard Gestor{% endblock %}
+{% block shell_title %}Gestión y curaduría del conocimiento{% endblock %}
+{% block content %}
+<section class="dashboard-header manager-gradient">
+    <div>
+        <span class="eyebrow">{{ role_display }}</span>
+        <h1>Laboratorio de conocimiento</h1>
+        <p>Capture, clasifique, audite e indexe documentos para alimentar el tutor virtual con información confiable.</p>
+    </div>
+</section>
+{% include 'core/_stats.html' %}
+{% include 'core/_quick_actions.html' %}
+<section class="grid two">
+    <article class="card">
+        <div class="pill green">Ciclo KM</div>
+        <h2>Flujo de gestión del conocimiento</h2>
+        <ol class="timeline">
+            <li><strong>Identificar:</strong> seleccionar documentos, guías, protocolos, FAQ y experiencias clave.</li>
+            <li><strong>Capturar:</strong> registrar título, fuente, categoría, etiquetas y contenido verificable.</li>
+            <li><strong>Indexar:</strong> fragmentar el conocimiento para búsqueda documental/semántica.</li>
+            <li><strong>Aplicar:</strong> usar el tutor IA y medir trazabilidad por historial y auditoría.</li>
+        </ol>
+    </article>
+    <article class="card">
+        <div class="pill purple">Calidad</div>
+        <h2>Criterios antes de cargar</h2>
+        <ul class="check-list">
+            <li>Contenido claro, actualizado y relacionado con el proyecto.</li>
+            <li>Fuente identificable para trazabilidad académica o institucional.</li>
+            <li>Etiquetas coherentes para recuperación rápida.</li>
+            <li>Categoría correcta: académico, institucional, técnico o FAQ.</li>
+        </ul>
+    </article>
+</section>
+{% include 'core/_dashboard_tables.html' %}
+{% endblock %}

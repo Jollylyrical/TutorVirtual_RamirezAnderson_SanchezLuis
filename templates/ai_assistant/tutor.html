@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% block title %}Tutor IA{% endblock %}
+{% block shell_title %}Consulta inteligente con IA{% endblock %}
+{% block content %}
+<section class="page-header">
+    <div>
+        <span class="eyebrow">Consulta inteligente</span>
+        <h1>Tutor virtual IA</h1>
+        <p>La pregunta se cruza con la base de conocimiento y luego Django envía el prompt al Webhook de n8n, que llama a GroqCloud como API gratuita/experimental.</p>
+    </div>
+    <div class="header-actions">
+        <span class="pill green">{{ stats.ai_provider|upper }} · {{ stats.ai_model }} · {% if stats.mongo_status %}MongoDB{% else %}SQL local{% endif %}</span>
+        <a class="btn-light" href="{% url 'n8n_config' %}">Configurar n8n + Groq</a>
+    </div>
+</section>
+
+{% if stats.ai_provider == 'n8n' and not stats.ai_ready %}
+<section class="card warning-card">
+    <strong>n8n está seleccionado, pero falta la URL del Webhook.</strong>
+    <p>Abra <a href="{% url 'n8n_config' %}">Configuración n8n + Groq</a>, revise la URL del Webhook y pegue la API key de Groq. El sistema mantiene respaldo local/directo según la configuración.</p>
+</section>
+{% elif stats.ai_provider == 'groq' and not stats.ai_ready %}
+<section class="card warning-card">
+    <strong>Groq está seleccionado, pero falta la API key.</strong>
+    <p>Abra <a href="{% url 'n8n_config' %}">Configuración n8n + Groq</a> y pegue la API key de Groq.</p>
+</section>
+{% elif stats.ai_provider == 'gemini' and not stats.ai_ready %}
+<section class="card warning-card">
+    <strong>Gemini está seleccionado, pero falta el token.</strong>
+    <p>Abra <a href="{% url 'gemini_config' %}">Configuración Gemini</a> y pegue su API key/token.</p>
+</section>
+{% endif %}
+
+<section class="grid two chat-layout">
+    <form method="post" class="card form-stack">
+        {% csrf_token %}
+        <div class="pill">Nueva consulta</div>
+        <label>Pregunta para el tutor
+            <textarea name="question" rows="10" required placeholder="Ej. ¿Cómo se aplica el modelo SECI en la gestión del conocimiento?">{{ question }}</textarea>
+        </label>
+        <button class="btn-primary" type="submit">✦ Preguntar al tutor</button>
+        <p class="muted small">El sistema registra la consulta, recupera contexto documental y conserva trazabilidad en el historial.</p>
+    </form>
+
+    <article class="card answer-card">
+        <div class="pill purple">Respuesta generada</div>
+        <h2>Resultado del tutor</h2>
+        {% if answer %}
+            <div class="answer-text">{{ answer|linebreaks }}</div>
+        {% else %}
+            <p class="muted">Aquí aparecerá la respuesta del tutor virtual después de enviar una pregunta.</p>
+            <div class="knowledge-map">
+                <div class="map-node"><strong>1</strong><span>Pregunta</span></div>
+                <div class="map-node"><strong>2</strong><span>Contexto</span></div>
+                <div class="map-node"><strong>3</strong><span>Respuesta</span></div>
+            </div>
+        {% endif %}
+    </article>
+</section>
+
+{% if context_used %}
+<section class="card">
+    <div class="pill orange">Evidencia de recuperación</div>
+    <h2>Contexto utilizado por el sistema</h2>
+    <div class="mini-list">
+    {% for item in context_used %}
+        <div>
+            <strong>{{ item.title }}</strong>
+            <span>Fuente: {{ item.source|default:'Sin fuente' }} · Puntaje: {{ item.score|floatformat:2 }} · {{ item.storage }}</span>
+            <p>{{ item.chunk|truncatechars:380 }}</p>
+        </div>
+    {% endfor %}
+    </div>
+</section>
+{% endif %}
+{% endblock %}

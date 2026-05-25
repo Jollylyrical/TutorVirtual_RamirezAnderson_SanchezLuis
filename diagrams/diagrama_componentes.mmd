@@ -1,0 +1,31 @@
+flowchart LR
+    subgraph Frontend[Django Frontend]
+        Templates[Templates HTML]
+        Static[CSS / JS]
+        Sessions[Sesiones web]
+    end
+    subgraph Backend[Backend Python]
+        Users[Usuarios y perfiles]
+        Knowledge[Gestión de documentos]
+        Tutor[Tutor IA]
+        Audit[Auditoría]
+    end
+    subgraph API[Django REST Framework]
+        Auth[JWT Token]
+        Docs[Documents API]
+        Ask[Ask API]
+        History[History API]
+    end
+    SQL[(PostgreSQL / SQLite)]
+    Mongo[(MongoDB / Fallback SQL)]
+    AI[Proveedor IA Local / OpenAI / Gemini]
+
+    Frontend --> Backend
+    Backend --> API
+    Auth --> SQL
+    Docs --> SQL
+    Docs --> Mongo
+    Ask --> Mongo
+    Ask --> AI
+    History --> SQL
+    Audit --> SQL

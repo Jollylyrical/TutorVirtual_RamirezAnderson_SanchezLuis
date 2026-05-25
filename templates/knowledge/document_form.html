@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% block title %}Nuevo documento{% endblock %}
+{% block shell_title %}Captura e indexación de conocimiento{% endblock %}
+{% block content %}
+<section class="page-header">
+    <div>
+        <span class="eyebrow">Captura de conocimiento</span>
+        <h1>Nuevo documento</h1>
+        <p>Al guardar, el sistema almacena metadatos en SQL y genera fragmentos consultables en MongoDB o fallback local.</p>
+    </div>
+</section>
+<section class="grid two">
+    <form method="post" class="card form-stack">
+        {% csrf_token %}
+        <label>Título del documento
+            <input type="text" name="title" required placeholder="Ej. Guía de gestión del conocimiento">
+        </label>
+        <div class="form-grid two-cols-form">
+            <label>Categoría
+                <select name="category">
+                    {% for value,label in category_choices %}
+                        <option value="{{ value }}">{{ label }}</option>
+                    {% endfor %}
+                </select>
+            </label>
+            <label>Fuente
+                <input type="text" name="source" placeholder="Documento, autor, dependencia o URL">
+            </label>
+        </div>
+        <label>Etiquetas
+            <input type="text" name="tags" placeholder="gestión, conocimiento, tutor virtual">
+        </label>
+        <label>Contenido
+            <textarea name="content" rows="13" required placeholder="Pegue aquí el contenido que alimentará al tutor virtual..."></textarea>
+        </label>
+        <div class="form-actions">
+            <button class="btn-primary" type="submit">Guardar e indexar</button>
+            <a class="btn-secondary" href="{% url 'documents' %}">Cancelar</a>
+        </div>
+    </form>
+    <aside class="card">
+        <div class="pill green">Buenas prácticas</div>
+        <h2>Revisión antes de guardar</h2>
+        <ul class="check-list">
+            <li>Use títulos claros y fáciles de buscar.</li>
+            <li>Incluya fuente para respaldo académico o institucional.</li>
+            <li>Separe etiquetas con coma.</li>
+            <li>Evite información duplicada o desactualizada.</li>
+            <li>Después de guardar, pruebe una pregunta en el Tutor IA.</li>
+        </ul>
+    </aside>
+</section>
+{% endblock %}

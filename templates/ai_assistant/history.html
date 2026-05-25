@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block title %}Historial{% endblock %}
+{% block shell_title %}Historial y trazabilidad de aprendizaje{% endblock %}
+{% block content %}
+<section class="page-header">
+    <div>
+        <span class="eyebrow">Trazabilidad</span>
+        <h1>Mi historial de consultas</h1>
+        <p>Registro de preguntas, respuestas y evidencias de uso del tutor virtual.</p>
+    </div>
+</section>
+
+<section class="history-list">
+{% for conversation in conversations %}
+    <article class="card conversation-card">
+        <div class="pill">Consulta registrada</div>
+        <h2>{{ conversation.title }}</h2>
+        <p class="muted small">Actualizada: {{ conversation.updated_at|date:'d/m/Y H:i' }}</p>
+        {% for msg in conversation.messages.all %}
+            <div class="message {{ msg.role }}">
+                <strong>{% if msg.role == 'user' %}Usuario{% elif msg.role == 'assistant' %}Tutor virtual{% else %}Sistema{% endif %}</strong>
+                <p>{{ msg.content|linebreaksbr }}</p>
+            </div>
+        {% endfor %}
+    </article>
+{% empty %}
+    <article class="card"><p class="muted">Aún no tiene consultas registradas.</p></article>
+{% endfor %}
+</section>
+{% endblock %}

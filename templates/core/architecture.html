@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% block title %}Arquitectura y protocolos{% endblock %}
+{% block shell_title %}Arquitectura técnica y protocolos{% endblock %}
+{% block content %}
+<section class="dashboard-header architecture-gradient">
+    <div>
+        <span class="eyebrow">Diagrama de despliegue aplicado</span>
+        <h1>Arquitectura del Tutor Virtual</h1>
+        <p>Vista funcional del flujo completo: cliente, Internet, Nginx, Django, API REST, servidor WSGI/ASGI, bases de datos e IA externa.</p>
+    </div>
+</section>
+
+<section class="architecture-flow">
+    <div class="flow-node client">Usuario / Cliente<br><small>Navegador Web</small></div>
+    <div class="flow-arrow">TCP/IP<br>HTTPS 443</div>
+    <div class="flow-node proxy">Reverse Proxy Nginx<br><small>TLS 1.2/1.3 · SSL</small></div>
+    <div class="flow-arrow">HTTP interno<br>WSGI/ASGI</div>
+    <div class="flow-node app">Django Web + Backend Python<br><small>Templates · Lógica · Sesiones</small></div>
+    <div class="flow-arrow">REST/JSON<br>JWT Bearer Token</div>
+    <div class="flow-node api">Django REST Framework<br><small>API protegida</small></div>
+</section>
+
+<section class="grid three">
+    <article class="card feature-card">
+        <div class="feature-icon">SQL</div>
+        <h2>PostgreSQL / SQLite</h2>
+        <p>Base relacional para usuarios, perfiles, documentos, auditoría, conversaciones y mensajes.</p>
+        <span class="pill">TCP 5432 · SQL</span>
+    </article>
+    <article class="card feature-card">
+        <div class="feature-icon">DB</div>
+        <h2>MongoDB Atlas / Local</h2>
+        <p>Repositorio documental/semántico para fragmentos de conocimiento. En localhost usa respaldo SQL si MongoDB no está activo.</p>
+        <span class="pill green">TCP 27017 · BSON</span>
+    </article>
+    <article class="card feature-card">
+        <div class="feature-icon">AI</div>
+        <h2>Servicio IA externo</h2>
+        <p>Proveedor local, OpenAI o Gemini para generar respuestas a partir del contexto recuperado.</p>
+        <span class="pill purple">HTTPS REST API · API KEY</span>
+    </article>
+</section>
+
+<section class="card">
+    <div class="pill orange">Seguridad y comunicación</div>
+    <h2>Protocolos implementados</h2>
+    <ul class="check-list two-cols">
+        {% for item in protocols %}<li>{{ item }}</li>{% endfor %}
+    </ul>
+</section>
+{% endblock %}

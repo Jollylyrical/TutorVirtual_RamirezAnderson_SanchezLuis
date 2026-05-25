@@ -1,0 +1,8 @@
+<section class="stats-grid">
+    <article class="stat-card"><span>Usuarios</span><strong>{{ stats.users }}</strong><small>perfiles activos</small></article>
+    <article class="stat-card"><span>Documentos</span><strong>{{ stats.documents }}</strong><small>base de conocimiento</small></article>
+    <article class="stat-card"><span>Conversaciones</span><strong>{{ stats.conversations }}</strong><small>consultas registradas</small></article>
+    <article class="stat-card"><span>Mensajes</span><strong>{{ stats.messages }}</strong><small>trazabilidad IA</small></article>
+    <article class="stat-card"><span>Proveedor IA</span><strong>{{ stats.ai_provider|upper }}</strong><small>modo operativo</small></article>
+    <article class="stat-card"><span>Repositorio</span><strong>{% if stats.mongo_status %}MongoDB{% else %}SQL local{% endif %}</strong><small>{{ stats.db_engine }}</small></article>
+</section>

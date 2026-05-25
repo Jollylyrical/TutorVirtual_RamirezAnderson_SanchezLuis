@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% block title %}Inicio - Tutor Virtual{% endblock %}
+{% block content %}
+<section class="hero hero-home">
+    <div>
+        <span class="eyebrow">Proyecto completo listo para localhost</span>
+        <h1>Tutor Virtual Inteligente para Gestión del Conocimiento</h1>
+        <p>
+            Plataforma web con dashboards por rol, base de conocimiento, recuperación semántica,
+            API REST protegida con JWT, historial de consultas e integración con IA local, Gemini u OpenAI.
+        </p>
+        <div class="hero-actions">
+            <a class="btn-primary" href="{% url 'login' %}">Entrar al dashboard</a>
+            <a class="btn-secondary" href="{% url 'register_page' %}">Crear usuario</a>
+        </div>
+    </div>
+    <div class="stack-card">
+        <span class="pill green">Arquitectura aplicada</span>
+        <h2>Cliente → Nginx → Django → API REST → BD/IA</h2>
+        <p>El diseño sigue los diagramas: navegador web, HTTPS/TLS, Django, WSGI/ASGI, PostgreSQL, MongoDB y servicio IA externo.</p>
+        <ul class="check-list">
+            <li>Frontend Django con interfaz profesional.</li>
+            <li>Backend Python + Django REST Framework.</li>
+            <li>Sesiones web y JWT Bearer Token.</li>
+            <li>SQLite local, PostgreSQL preparado y MongoDB con fallback SQL.</li>
+        </ul>
+    </div>
+</section>
+
+<section class="grid three">
+    <article class="card feature-card">
+        <div class="feature-icon">▦</div>
+        <h2>Administrador</h2>
+        <p>Supervisa usuarios, auditoría, servicios, protocolos, repositorio de conocimiento y comportamiento general del sistema.</p>
+    </article>
+    <article class="card feature-card">
+        <div class="feature-icon">▤</div>
+        <h2>Gestor / Tutor</h2>
+        <p>Carga documentos, clasifica fuentes, revisa trazabilidad y transforma contenidos en respuestas útiles para el aprendizaje.</p>
+    </article>
+    <article class="card feature-card">
+        <div class="feature-icon">✦</div>
+        <h2>Estudiante</h2>
+        <p>Consulta documentos, formula preguntas al tutor virtual y revisa su historial de aprendizaje de forma organizada.</p>
+    </article>
+</section>
+
+<section class="card">
+    <div class="page-header compact">
+        <div>
+            <span class="eyebrow">Acceso rápido</span>
+            <h1>Usuarios de prueba</h1>
+            <p>Ejecute <code>python manage.py seed_demo</code> para cargar estos usuarios y documentos de ejemplo.</p>
+        </div>
+    </div>
+    <div class="demo-grid">
+        <div class="demo-user"><strong>Administrador</strong><code>admin_demo</code><br><code>Admin12345*</code><button class="copy-btn" data-copy="admin_demo">Copiar usuario</button></div>
+        <div class="demo-user"><strong>Gestor</strong><code>gestor_demo</code><br><code>Gestor12345*</code><button class="copy-btn" data-copy="gestor_demo">Copiar usuario</button></div>
+        <div class="demo-user"><strong>Tutor</strong><code>tutor_demo</code><br><code>Tutor12345*</code><button class="copy-btn" data-copy="tutor_demo">Copiar usuario</button></div>
+        <div class="demo-user"><strong>Estudiante</strong><code>estudiante_demo</code><br><code>Estudiante12345*</code><button class="copy-btn" data-copy="estudiante_demo">Copiar usuario</button></div>
+    </div>
+</section>
+{% endblock %}

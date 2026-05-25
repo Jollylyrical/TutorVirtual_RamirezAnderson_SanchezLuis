@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block title %}Ingresar - Tutor Virtual{% endblock %}
+{% block content %}
+<section class="auth-shell">
+    <aside class="auth-visual">
+        <span class="pill green">Acceso al sistema</span>
+        <h1>Dashboard por rol</h1>
+        <p>Ingrese como administrador, gestor, tutor o estudiante para ver una interfaz diferente, con permisos y acciones ajustadas al rol.</p>
+        <ul class="check-list">
+            <li>Sesión web protegida.</li>
+            <li>API REST disponible con JWT.</li>
+            <li>Datos demo listos para probar en localhost.</li>
+        </ul>
+    </aside>
+    <section class="auth-card">
+        <h1>Ingresar</h1>
+        <p class="muted">Use un usuario demo o registre un nuevo usuario según el rol que necesite probar.</p>
+        <form method="post" class="form-stack">
+            {% csrf_token %}
+            <label>Usuario
+                <input type="text" name="username" required autocomplete="username" placeholder="admin_demo">
+            </label>
+            <label>Contraseña
+                <input type="password" name="password" required autocomplete="current-password" placeholder="********">
+            </label>
+            <button class="btn-primary" type="submit">Ingresar al sistema</button>
+        </form>
+        <p class="muted small">Para datos demo ejecute: <code>python manage.py seed_demo</code></p>
+    </section>
+</section>
+{% endblock %}

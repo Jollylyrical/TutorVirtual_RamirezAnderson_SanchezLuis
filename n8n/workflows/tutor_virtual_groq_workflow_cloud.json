@@ -1,0 +1,128 @@
+{
+  "name": "Tutor Virtual - n8n Cloud + GroqCloud",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "tutor-virtual-ai",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "WebhookTutorVirtual",
+      "name": "Webhook Tutor Virtual",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -760,
+        20
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.groq.com/openai/v1/chat/completions",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{$json.body.groq_api_key || $json.headers[\"x-groq-api-key\"] || $env.GROQ_API_KEY}}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": $json.body.model || $env.GROQ_MODEL || \"llama-3.1-8b-instant\",\n  \"messages\": [\n    {\n      \"role\": \"system\",\n      \"content\": \"Eres un tutor virtual academico de gestion del conocimiento. Responde en espanol, de forma clara, pedagogica y trazable.\"\n    },\n    {\n      \"role\": \"user\",\n      \"content\": $json.body.prompt || \"No se recibio pregunta.\"\n    }\n  ],\n  \"temperature\": $json.body.temperature || 0.35,\n  \"max_completion_tokens\": $json.body.max_tokens || 1200\n}",
+        "options": {
+          "timeout": 60000
+        }
+      },
+      "id": "GroqHTTP",
+      "name": "GroqCloud Chat Completion",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -420,
+        20
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const data = $input.first().json;\nconst answer = data?.choices?.[0]?.message?.content || data?.answer || data?.text || 'GroqCloud no devolvio texto.';\nreturn [{\n  json: {\n    answer,\n    provider: 'n8n-groq',\n    model: data?.model || 'groq',\n    created_at: new Date().toISOString()\n  }\n}];"
+      },
+      "id": "FormatResponse",
+      "name": "Formatear respuesta",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -120,
+        20
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{$json}}",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "id": "RespondWebhook",
+      "name": "Responder a Django",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        180,
+        20
+      ]
+    }
+  ],
+  "connections": {
+    "Webhook Tutor Virtual": {
+      "main": [
+        [
+          {
+            "node": "GroqCloud Chat Completion",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GroqCloud Chat Completion": {
+      "main": [
+        [
+          {
+            "node": "Formatear respuesta",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Formatear respuesta": {
+      "main": [
+        [
+          {
+            "node": "Responder a Django",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "active": false,
+  "pinData": {},
+  "versionId": "tutor-virtual-n8n-cloud-groq-v2",
+  "meta": {
+    "templateCredsSetupCompleted": true
+  }
+}

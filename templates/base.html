@@ -1,0 +1,94 @@
+{% load static %}
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Tutor Virtual Inteligente{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/app.css' %}">
+</head>
+<body class="{% if user.is_authenticated %}with-shell{% endif %}">
+{% if user.is_authenticated %}
+<div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+        <a class="brand" href="{% url 'dashboard' %}">
+            <span class="brand-logo">TV</span>
+            <span class="brand-text">
+                <strong>Tutor Virtual</strong>
+                <small>Gestión del Conocimiento</small>
+            </span>
+        </a>
+        <div class="sidebar-divider"></div>
+        <div class="sidebar-section-title">Menú principal</div>
+        <nav class="side-nav">
+            <a href="{% url 'dashboard' %}" class="{% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}"><span class="nav-icon">▦</span>Dashboard</a>
+            <a href="{% url 'tutor' %}" class="{% if request.resolver_match.url_name == 'tutor' %}active{% endif %}"><span class="nav-icon">✦</span>Tutor IA</a>
+            <a href="{% url 'n8n_config' %}" class="{% if request.resolver_match.url_name == 'n8n_config' %}active{% endif %}"><span class="nav-icon">◇</span>n8n + Groq</a>
+            <a href="{% url 'gemini_config' %}" class="{% if request.resolver_match.url_name == 'gemini_config' %}active{% endif %}"><span class="nav-icon">◆</span>Gemini opcional</a>
+            <a href="{% url 'documents' %}" class="{% if request.resolver_match.url_name == 'documents' or request.resolver_match.url_name == 'document_create' %}active{% endif %}"><span class="nav-icon">▤</span>Conocimiento</a>
+            <a href="{% url 'history' %}" class="{% if request.resolver_match.url_name == 'history' %}active{% endif %}"><span class="nav-icon">◷</span>Historial</a>
+            <a href="{% url 'architecture' %}" class="{% if request.resolver_match.url_name == 'architecture' %}active{% endif %}"><span class="nav-icon">⌬</span>Arquitectura</a>
+        </nav>
+        <div class="sidebar-section-title">Estado</div>
+        <div class="side-panel">
+            <strong><span class="status-dot"></span>Sistema local activo</strong>
+            <p>Django + API REST + JWT + SQL/MongoDB + n8n Webhook + GroqCloud siguiendo el diagrama UML de despliegue.</p>
+        </div>
+        <div class="side-panel">
+            <strong>{{ user.first_name|default:user.username }}</strong>
+            <p>Rol: {{ role_display|default:'Usuario autenticado' }}</p>
+            <a class="btn-light" href="{% url 'logout' %}">Cerrar sesión</a>
+        </div>
+    </aside>
+    <section class="shell-main">
+        <header class="shell-topbar">
+            <button class="btn-light mobile-menu" data-menu-toggle type="button">☰ Menú</button>
+            <div class="shell-title">
+                <strong>{% block shell_title %}Sistema de gestión del conocimiento{% endblock %}</strong>
+                <small>Arquitectura funcional: Cliente → Django/API REST → BD → n8n → IA externa</small>
+            </div>
+            <div class="user-chip">
+                <span class="avatar">{{ user.first_name|default:user.username|first|upper }}</span>
+                <span><strong>{{ user.first_name|default:user.username }}</strong><span>{{ role_display|default:'Usuario' }}</span></span>
+            </div>
+        </header>
+        {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        <main class="container-shell">
+{% else %}
+<header class="public-header">
+    <a class="brand" href="{% url 'home' %}">
+        <span class="brand-logo">TV</span>
+        <span class="brand-text">
+            <strong>Tutor Virtual Inteligente</strong>
+            <small>Gestión del Conocimiento</small>
+        </span>
+    </a>
+    <nav class="public-nav">
+        <a href="{% url 'login' %}">Ingresar</a>
+        <a href="{% url 'register_page' %}" class="btn-primary">Crear usuario</a>
+    </nav>
+</header>
+{% if messages %}
+<div class="messages">
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+    {% endfor %}
+</div>
+{% endif %}
+<main class="container">
+{% endif %}
+            {% block content %}{% endblock %}
+        </main>
+{% if user.is_authenticated %}
+    </section>
+</div>
+{% endif %}
+<script src="{% static 'js/app.js' %}"></script>
+</body>
+</html>

@@ -1,0 +1,43 @@
+services:
+  n8n:
+    image: n8nio/n8n:latest
+    container_name: tutor_n8n
+    restart: unless-stopped
+    ports:
+      - "5678:5678"
+    env_file:
+      - .env
+    environment:
+      - N8N_HOST=localhost
+      - N8N_PORT=5678
+      - N8N_PROTOCOL=http
+      - WEBHOOK_URL=http://localhost:5678/
+      - N8N_SECURE_COOKIE=false
+      - GENERIC_TIMEZONE=America/Bogota
+      - TZ=America/Bogota
+      - N8N_TUTOR_SHARED_SECRET=${N8N_SHARED_SECRET}
+      - GROQ_API_KEY=${GROQ_API_KEY}
+      - GROQ_MODEL=${GROQ_MODEL}
+    volumes:
+      - n8n_data:/home/node/.n8n
+      - ./n8n/workflows:/workflows:ro
+
+  web:
+    build: .
+    container_name: tutor_web_n8n
+    env_file:
+      - .env
+    environment:
+      - LOCALHOST_MODE=True
+      - USE_POSTGRES=False
+      - DB_ENGINE=sqlite
+      - AI_PROVIDER=n8n
+      - N8N_WEBHOOK_URL=http://n8n:5678/webhook/tutor-virtual-ai
+    ports:
+      - "8000:8000"
+    depends_on:
+      - n8n
+    command: sh -c "python manage.py migrate --noinput && python manage.py seed_demo && gunicorn config.wsgi:application --bind 0.0.0.0:8000 --workers 2"
+
+volumes:
+  n8n_data:

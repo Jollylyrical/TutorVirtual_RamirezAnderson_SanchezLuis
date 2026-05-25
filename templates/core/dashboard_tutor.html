@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard Tutor{% endblock %}
+{% block shell_title %}Panel pedagógico del tutor{% endblock %}
+{% block content %}
+<section class="dashboard-header tutor-gradient">
+    <div>
+        <span class="eyebrow">{{ role_display }}</span>
+        <h1>Panel pedagógico inteligente</h1>
+        <p>Use la base de conocimiento para orientar explicaciones, actividades, retroalimentación y rutas de aprendizaje.</p>
+    </div>
+</section>
+{% include 'core/_stats.html' %}
+{% include 'core/_quick_actions.html' %}
+<section class="grid two">
+    <article class="card">
+        <div class="pill purple">Consultas</div>
+        <h2>Mis conversaciones recientes</h2>
+        {% if user_conversations %}
+            <div class="mini-list">
+            {% for conv in user_conversations %}
+                <div><strong>{{ conv.title }}</strong><span>{{ conv.updated_at|date:'d/m/Y H:i' }}</span></div>
+            {% endfor %}
+            </div>
+        {% else %}<p class="muted">Aún no ha realizado consultas.</p>{% endif %}
+    </article>
+    <article class="card">
+        <div class="pill green">Didáctica</div>
+        <h2>Aplicación pedagógica</h2>
+        <div class="knowledge-map">
+            <div class="map-node"><strong>Explicar</strong><span>Convertir documentos técnicos en lenguaje claro.</span></div>
+            <div class="map-node"><strong>Guiar</strong><span>Proponer rutas de aprendizaje y ejemplos prácticos.</span></div>
+            <div class="map-node"><strong>Evaluar</strong><span>Generar preguntas y retroalimentación contextualizada.</span></div>
+        </div>
+    </article>
+</section>
+{% include 'core/_dashboard_tables.html' %}
+{% endblock %}

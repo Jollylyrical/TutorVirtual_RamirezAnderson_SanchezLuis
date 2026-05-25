@@ -1,0 +1,24 @@
+<section class="quick-actions">
+    <a href="{% url 'tutor' %}" class="action-card">
+        <div class="action-icon">✦</div>
+        <strong>Preguntar al tutor IA</strong>
+        <span>Recupera contexto de la base de conocimiento y genera una respuesta trazable.</span>
+    </a>
+    <a href="{% url 'documents' %}" class="action-card">
+        <div class="action-icon">▤</div>
+        <strong>Explorar conocimiento</strong>
+        <span>Consulta documentos, categorías, fuentes y etiquetas disponibles.</span>
+    </a>
+    {% if can_manage_knowledge %}
+    <a href="{% url 'document_create' %}" class="action-card">
+        <div class="action-icon">＋</div>
+        <strong>Cargar documento</strong>
+        <span>Guarda metadatos en SQL e indexa fragmentos en MongoDB o fallback local.</span>
+    </a>
+    {% endif %}
+    <a href="{% url 'history' %}" class="action-card">
+        <div class="action-icon">◷</div>
+        <strong>Historial</strong>
+        <span>Revisa evidencias de preguntas, respuestas y contexto utilizado.</span>
+    </a>
+</section>

@@ -1,0 +1,113 @@
+{% extends 'base.html' %}
+{% block title %}Configuración n8n + Groq{% endblock %}
+{% block shell_title %}Automatización del tutor virtual con n8n{% endblock %}
+{% block content %}
+<section class="page-header gemini-hero card n8n-hero">
+    <div>
+        <span class="eyebrow">Automatización IA · n8n Cloud Webhook · GroqCloud</span>
+        <h1>Configuración n8n + API gratuita de IA</h1>
+        <p>Este flujo deja a Django como interfaz y backend académico, mientras n8n Cloud orquesta la llamada a GroqCloud mediante un Webhook REST publicado. Es ideal para demostrar automatización, integración y gestión del conocimiento.</p>
+    </div>
+    <div class="gemini-status-badge {% if ai_status.api_key_configured %}ready{% else %}pending{% endif %}">
+        <strong>{{ ai_status.mode_label }}</strong>
+        <span>{{ ai_status.model }}</span>
+    </div>
+</section>
+
+<section class="grid two">
+    <form method="post" class="card form-stack gemini-form">
+        {% csrf_token %}
+        <div class="pill purple">Proveedor recomendado: n8n → GroqCloud</div>
+        <h2>Conexión del tutor virtual</h2>
+        <p class="muted">Para su cuenta use el Webhook productivo de n8n Cloud: <strong>https://tutorvirtual.app.n8n.cloud/webhook/tutor-virtual-ai</strong>. En desarrollo de n8n puede probar temporalmente con la URL de test <strong>/webhook-test/</strong>.</p>
+
+        <div class="form-grid">
+            <label>Modo de IA
+                <select name="provider_mode">
+                    <option value="n8n" {% if current_provider == 'n8n' %}selected{% endif %}>n8n Webhook + Groq</option>
+                    <option value="groq" {% if current_provider == 'groq' %}selected{% endif %}>Groq directo sin n8n</option>
+                    <option value="local" {% if current_provider == 'local' %}selected{% endif %}>Local sin internet</option>
+                </select>
+            </label>
+            <label>URL Webhook n8n
+                <input name="n8n_webhook_url" value="{{ n8n_webhook_url }}" placeholder="https://tutorvirtual.app.n8n.cloud/webhook/tutor-virtual-ai">
+            </label>
+            <label>Secreto compartido n8n
+                <input name="n8n_shared_secret" value="{{ n8n_shared_secret }}" placeholder="dev-n8n-secret">
+            </label>
+            <label>Timeout n8n / Groq
+                <input name="n8n_timeout" type="number" min="10" max="180" value="{{ n8n_timeout }}">
+            </label>
+        </div>
+
+        <h2>API key y modelo Groq</h2>
+        <p class="muted">Pegue aquí la API key de GroqCloud. El campo queda vacío por seguridad, pero se conserva en el archivo .env local.</p>
+        <label>GROQ_API_KEY
+            <input name="groq_api_key" type="password" placeholder="Pegue aquí su API key de Groq">
+        </label>
+        <div class="secret-preview">
+            <span>API key actual</span>
+            <strong>{{ masked_groq_key }}</strong>
+        </div>
+        <div class="form-grid">
+            <label>Modelo Groq
+                <select name="groq_model">
+                    <option value="llama-3.1-8b-instant" {% if groq_model == 'llama-3.1-8b-instant' %}selected{% endif %}>llama-3.1-8b-instant · rápido y alto contexto</option>
+                    <option value="llama-3.3-70b-versatile" {% if groq_model == 'llama-3.3-70b-versatile' %}selected{% endif %}>llama-3.3-70b-versatile · mejor calidad</option>
+                    <option value="qwen/qwen3-32b" {% if groq_model == 'qwen/qwen3-32b' %}selected{% endif %}>qwen/qwen3-32b · razonamiento</option>
+                    <option value="openai/gpt-oss-20b" {% if groq_model == 'openai/gpt-oss-20b' %}selected{% endif %}>openai/gpt-oss-20b · liviano</option>
+                </select>
+            </label>
+            <label>Máximo de tokens de salida
+                <input name="groq_max_output_tokens" type="number" min="100" max="8192" value="{{ groq_max_output_tokens }}">
+            </label>
+            <label>Temperatura
+                <input name="groq_temperature" type="number" min="0" max="1" step="0.05" value="{{ groq_temperature }}">
+            </label>
+            <label>Respaldo si n8n falla
+                <select name="n8n_fallback_provider">
+                    <option value="groq" {% if n8n_fallback_provider == 'groq' %}selected{% endif %}>Groq directo</option>
+                    <option value="local" {% if n8n_fallback_provider == 'local' %}selected{% endif %}>Sin respaldo directo</option>
+                </select>
+            </label>
+        </div>
+
+        <label>Archivo .env local
+            <input value="{{ env_file }}" readonly>
+        </label>
+
+        <div class="button-row">
+            <button class="btn-primary" type="submit">Guardar configuración</button>
+            <button class="btn-light" type="submit" name="test_connection" value="1">Guardar y probar conexión</button>
+        </div>
+    </form>
+
+    <article class="card gemini-panel">
+        <div class="pill green">Flujo aplicado al diagrama</div>
+        <h2>Cómo queda conectado</h2>
+        <div class="ai-flow-mini n8n-flow-mini">
+            <div><strong>1</strong><span>Usuario pregunta en dashboard</span></div>
+            <div><strong>2</strong><span>Django recupera contexto SQL/MongoDB</span></div>
+            <div><strong>3</strong><span>Django llama Webhook n8n</span></div>
+            <div><strong>4</strong><span>n8n consulta GroqCloud</span></div>
+            <div><strong>5</strong><span>Respuesta e historial trazable</span></div>
+        </div>
+        <ul class="check-list">
+            <li><strong>AI_PROVIDER=n8n</strong> queda guardado automáticamente.</li>
+            <li><strong>N8N_WEBHOOK_URL</strong> apunta al Webhook productivo de n8n.</li>
+            <li><strong>GROQ_API_KEY</strong> se usa en n8n y como respaldo directo.</li>
+            <li>El historial guarda pregunta, respuesta y contexto usado.</li>
+        </ul>
+        <div class="test-output">
+            <strong>Workflow incluido</strong>
+            <p>Importe en n8n Cloud el archivo <code>n8n/workflows/tutor_virtual_groq_workflow_cloud.json</code>, pruebe con la Test URL y después publique/active el workflow para usar el Webhook productivo.</p>
+        </div>
+        {% if test_answer %}
+        <div class="test-output">
+            <strong>Respuesta de prueba</strong>
+            <p>{{ test_answer }}</p>
+        </div>
+        {% endif %}
+    </article>
+</section>
+{% endblock %}

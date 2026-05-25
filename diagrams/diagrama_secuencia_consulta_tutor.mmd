@@ -1,0 +1,21 @@
+sequenceDiagram
+    actor Usuario
+    participant Front as Frontend Django
+    participant API as API REST DRF
+    participant SQL as PostgreSQL/SQLite
+    participant Mongo as MongoDB/Fallback SQL
+    participant IA as Servicio IA
+
+    Usuario->>Front: Escribe pregunta
+    Front->>API: POST /api/ai/ask/ o vista web tutor
+    API->>Mongo: Buscar fragmentos relevantes
+    alt MongoDB disponible
+        Mongo-->>API: Chunks documentales
+    else MongoDB no disponible
+        SQL-->>API: Búsqueda local en documentos
+    end
+    API->>IA: Prompt + contexto por HTTPS/API Key o modo local
+    IA-->>API: Respuesta generada
+    API->>SQL: Guardar conversación y mensajes
+    API-->>Front: JSON/respuesta renderizada
+    Front-->>Usuario: Muestra respuesta y contexto usado

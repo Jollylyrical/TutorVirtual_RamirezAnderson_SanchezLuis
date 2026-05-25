@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% block title %}Configuración Gemini{% endblock %}
+{% block shell_title %}Token Gemini para el tutor virtual{% endblock %}
+{% block content %}
+<section class="page-header gemini-hero card">
+    <div>
+        <span class="eyebrow">IA externa · Gemini API</span>
+        <h1>Configuración del token Gemini</h1>
+        <p>Active el tutor virtual con una API key/token de Gemini. El sistema conserva la recuperación de contexto desde la base de conocimiento y luego llama a Gemini mediante HTTPS REST.</p>
+    </div>
+    <div class="gemini-status-badge {% if ai_status.api_key_configured %}ready{% else %}pending{% endif %}">
+        <strong>{{ ai_status.mode_label }}</strong>
+        <span>{{ ai_status.model }}</span>
+    </div>
+</section>
+
+<section class="grid two">
+    <form method="post" class="card form-stack gemini-form">
+        {% csrf_token %}
+        <div class="pill purple">Proveedor seleccionado: Gemini</div>
+        <h2>Token y modelo</h2>
+        <p class="muted">Pegue aquí la API key/token generada en Google AI Studio. Por seguridad, el campo no muestra el token actual; solo se guarda si usted escribe uno nuevo.</p>
+
+        <label>API key / Token de Gemini
+            <input name="gemini_api_key" type="password" placeholder="Pegue aquí su token de Gemini">
+        </label>
+        <div class="secret-preview">
+            <span>Token actual</span>
+            <strong>{{ masked_gemini_key }}</strong>
+        </div>
+
+        <div class="form-grid">
+            <label>Modelo Gemini
+                <select name="gemini_model">
+                    <option value="gemini-2.0-flash" {% if gemini_model == 'gemini-2.0-flash' %}selected{% endif %}>gemini-2.0-flash</option>
+                    <option value="gemini-2.5-flash" {% if gemini_model == 'gemini-2.5-flash' %}selected{% endif %}>gemini-2.5-flash</option>
+                    <option value="gemini-2.5-flash-lite" {% if gemini_model == 'gemini-2.5-flash-lite' %}selected{% endif %}>gemini-2.5-flash-lite</option>
+                </select>
+            </label>
+            <label>Máximo de tokens de salida
+                <input name="gemini_max_output_tokens" type="number" min="100" max="8192" value="{{ gemini_max_output_tokens }}">
+            </label>
+            <label>Temperatura
+                <input name="gemini_temperature" type="number" min="0" max="1" step="0.05" value="{{ gemini_temperature }}">
+            </label>
+            <label>Archivo .env local
+                <input value="{{ env_file }}" readonly>
+            </label>
+        </div>
+
+        <div class="button-row">
+            <button class="btn-primary" type="submit">Guardar configuración</button>
+            <button class="btn-light" type="submit" name="test_connection" value="1">Guardar y probar conexión</button>
+        </div>
+    </form>
+
+    <article class="card gemini-panel">
+        <div class="pill green">Flujo aplicado al diagrama</div>
+        <h2>Cómo queda conectado</h2>
+        <div class="ai-flow-mini">
+            <div><strong>1</strong><span>Usuario pregunta en el dashboard</span></div>
+            <div><strong>2</strong><span>Django recupera contexto SQL/MongoDB</span></div>
+            <div><strong>3</strong><span>Se arma prompt trazable</span></div>
+            <div><strong>4</strong><span>Gemini responde por HTTPS REST</span></div>
+        </div>
+        <ul class="check-list">
+            <li><strong>AI_PROVIDER=gemini</strong> queda guardado automáticamente.</li>
+            <li><strong>GEMINI_API_KEY</strong> se lee desde .env o variable de entorno.</li>
+            <li>El historial guarda pregunta, respuesta y contexto usado.</li>
+            <li>Si no hay MongoDB, sigue funcionando con búsqueda local en SQLite.</li>
+        </ul>
+        {% if test_answer %}
+        <div class="test-output">
+            <strong>Respuesta de prueba</strong>
+            <p>{{ test_answer }}</p>
+        </div>
+        {% endif %}
+    </article>
+</section>
+{% endblock %}

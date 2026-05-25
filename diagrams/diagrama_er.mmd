@@ -1,0 +1,49 @@
+erDiagram
+    USER ||--|| USER_PROFILE : tiene
+    USER ||--o{ KNOWLEDGE_DOCUMENT : crea
+    USER ||--o{ CONVERSATION : realiza
+    USER ||--o{ KNOWLEDGE_AUDIT_LOG : genera
+    KNOWLEDGE_DOCUMENT ||--o{ KNOWLEDGE_AUDIT_LOG : registra
+    CONVERSATION ||--o{ MESSAGE : contiene
+
+    USER {
+      int id PK
+      string username
+      string email
+      string first_name
+      string last_name
+    }
+    USER_PROFILE {
+      int id PK
+      string role
+      string institution
+      string program
+    }
+    KNOWLEDGE_DOCUMENT {
+      int id PK
+      string title
+      string category
+      string source
+      text content
+      string tags
+      bool is_active
+    }
+    KNOWLEDGE_AUDIT_LOG {
+      int id PK
+      string action
+      json details
+      datetime created_at
+    }
+    CONVERSATION {
+      int id PK
+      string title
+      datetime created_at
+      datetime updated_at
+    }
+    MESSAGE {
+      int id PK
+      string role
+      text content
+      json metadata
+      datetime created_at
+    }

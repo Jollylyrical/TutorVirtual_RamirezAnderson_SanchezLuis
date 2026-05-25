@@ -1,0 +1,18 @@
+flowchart TB
+    U[Usuario / Navegador]
+    D[Django Frontend + Backend\nDashboards por rol + API REST + JWT]
+    SQL[(SQLite localhost / PostgreSQL despliegue)]
+    M[(MongoDB opcional / Respaldo SQL)]
+    W[n8n Webhook\n/workflow tutor-virtual-ai]
+    G((GroqCloud API\nModelo llama-3.1-8b-instant))
+    H[(Historial de conversaciones)]
+
+    U -- HTTP localhost:8000 --> D
+    D -- Consulta contexto SQL --> SQL
+    D -- Consulta semántica opcional --> M
+    D -- POST JSON + secreto --> W
+    W -- HTTPS REST + Bearer API Key --> G
+    G -- Respuesta IA --> W
+    W -- JSON answer --> D
+    D -- Guarda pregunta/respuesta/contexto --> H
+    D -- Renderiza respuesta --> U

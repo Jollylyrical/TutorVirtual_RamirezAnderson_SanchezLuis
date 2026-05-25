@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block title %}Base de conocimiento{% endblock %}
+{% block shell_title %}Repositorio de conocimiento{% endblock %}
+{% block content %}
+<section class="page-header">
+    <div>
+        <span class="eyebrow">Repositorio institucional</span>
+        <h1>Base de conocimiento</h1>
+        <p>Documentos guardados en SQL e indexados en MongoDB o fallback local para recuperación contextual.</p>
+    </div>
+    {% if can_manage_knowledge %}
+        <a class="btn-primary" href="{% url 'document_create' %}">＋ Nuevo documento</a>
+    {% endif %}
+</section>
+
+<form method="get" class="filters card compact">
+    <label>Buscar en el repositorio
+        <input type="search" name="q" value="{{ q }}" placeholder="Ej. seguridad, SECI, arquitectura, protocolo">
+    </label>
+    <label>Categoría
+        <select name="category">
+            <option value="">Todas las categorías</option>
+            {% for value,label in category_choices %}
+                <option value="{{ value }}" {% if category_filter == value %}selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+        </select>
+    </label>
+    <button class="btn-secondary" type="submit">Filtrar</button>
+</form>
+
+<section class="documents-grid">
+{% for doc in documents %}
+    <article class="document-card">
+        <div class="doc-meta"><span>{{ doc.get_category_display }}</span><span>{{ doc.created_at|date:'d/m/Y' }}</span></div>
+        <h2>{{ doc.title }}</h2>
+        <p>{{ doc.content|truncatechars:310 }}</p>
+        <footer>
+            <span><strong>Fuente:</strong> {{ doc.source|default:'Sin fuente' }}</span>
+            <span><strong>Etiquetas:</strong> {{ doc.tags|default:'Sin etiquetas' }}</span>
+        </footer>
+    </article>
+{% empty %}
+    <article class="card"><p class="muted">No hay documentos que coincidan con el filtro.</p></article>
+{% endfor %}
+</section>
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block title %}Registro - Tutor Virtual{% endblock %}
+{% block content %}
+<section class="auth-card wide">
+    <span class="eyebrow">Usuarios y roles</span>
+    <h1>Crear usuario</h1>
+    <p class="muted">El sistema asigna un dashboard diferente según el rol seleccionado.</p>
+    <form method="post" class="form-grid">
+        {% csrf_token %}
+        <label>Nombre
+            <input type="text" name="first_name" placeholder="Nombre">
+        </label>
+        <label>Apellido
+            <input type="text" name="last_name" placeholder="Apellido">
+        </label>
+        <label>Usuario
+            <input type="text" name="username" required placeholder="usuario">
+        </label>
+        <label>Correo
+            <input type="email" name="email" placeholder="correo@ejemplo.com">
+        </label>
+        <label>Rol
+            <select name="role">
+                {% for value,label in roles %}
+                    <option value="{{ value }}">{{ label }}</option>
+                {% endfor %}
+            </select>
+        </label>
+        <label>Contraseña
+            <input type="password" name="password" required minlength="8">
+        </label>
+        <label>Confirmar contraseña
+            <input type="password" name="password2" required minlength="8">
+        </label>
+        <div class="form-actions full">
+            <button class="btn-primary" type="submit">Crear cuenta</button>
+            <a class="btn-secondary" href="{% url 'login' %}">Ya tengo cuenta</a>
+        </div>
+    </form>
+</section>
+{% endblock %}

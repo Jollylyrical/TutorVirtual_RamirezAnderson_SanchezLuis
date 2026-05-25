@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard Estudiante{% endblock %}
+{% block shell_title %}Espacio personal de aprendizaje{% endblock %}
+{% block content %}
+<section class="dashboard-header student-gradient">
+    <div>
+        <span class="eyebrow">{{ role_display }}</span>
+        <h1>Mi espacio de aprendizaje</h1>
+        <p>Pregunte al tutor, consulte documentos y use el historial como evidencia de aprendizaje y apropiación del conocimiento.</p>
+    </div>
+</section>
+<section class="stats-grid student-only">
+    <article class="stat-card"><span>Mis consultas</span><strong>{{ stats.my_conversations }}</strong><small>historial personal</small></article>
+    <article class="stat-card"><span>Documentos</span><strong>{{ stats.documents }}</strong><small>disponibles para estudiar</small></article>
+    <article class="stat-card"><span>IA activa</span><strong>{{ stats.ai_provider|upper }}</strong><small>generación de respuestas</small></article>
+    <article class="stat-card"><span>Repositorio</span><strong>{% if stats.mongo_status %}MongoDB{% else %}SQL local{% endif %}</strong><small>contexto recuperado</small></article>
+</section>
+{% include 'core/_quick_actions.html' %}
+<section class="grid two">
+    <article class="card">
+        <div class="pill">Actividad reciente</div>
+        <h2>Mis consultas</h2>
+        {% if user_conversations %}
+            <div class="mini-list">
+            {% for conv in user_conversations %}
+                <div><strong>{{ conv.title }}</strong><span>{{ conv.updated_at|date:'d/m/Y H:i' }}</span></div>
+            {% endfor %}
+            </div>
+        {% else %}<p class="muted">Todavía no ha realizado consultas al tutor IA.</p>{% endif %}
+    </article>
+    <article class="card">
+        <div class="pill green">Ruta recomendada</div>
+        <h2>Cómo aprovechar el sistema</h2>
+        <ol class="timeline">
+            <li>Revise la base de conocimiento y ubique el tema que necesita.</li>
+            <li>Pregunte al tutor con una duda concreta.</li>
+            <li>Lea el contexto recuperado para comprobar la fuente.</li>
+            <li>Guarde el historial como evidencia de aprendizaje.</li>
+        </ol>
+    </article>
+</section>
+{% endblock %}

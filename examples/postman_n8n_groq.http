@@ -1,0 +1,37 @@
+### Prueba directa del Webhook n8n
+POST https://tutorvirtual.app.n8n.cloud/webhook/tutor-virtual-ai
+Content-Type: application/json
+X-Tutor-Secret: dev-n8n-secret
+
+{
+  "prompt": "Explica en español y en 3 puntos qué es la gestión del conocimiento.",
+  "model": "llama-3.1-8b-instant",
+  "temperature": 0.35,
+  "max_tokens": 600
+}
+
+### Prueba directa GroqCloud sin n8n
+POST https://api.groq.com/openai/v1/chat/completions
+Authorization: Bearer PEGUE_AQUI_SU_GROQ_API_KEY
+Content-Type: application/json
+
+{
+  "model": "llama-3.1-8b-instant",
+  "messages": [
+    {"role": "system", "content": "Responde en español."},
+    {"role": "user", "content": "Define gestión del conocimiento."}
+  ],
+  "temperature": 0.35,
+  "max_completion_tokens": 600
+}
+
+
+### Prueba directa Webhook n8n Cloud
+POST https://tutorvirtual.app.n8n.cloud/webhook/tutor-virtual-ai
+Content-Type: application/json
+
+{
+  "prompt": "Explica brevemente qué es la gestión del conocimiento.",
+  "model": "llama-3.1-8b-instant",
+  "groq_api_key": "PEGUE_AQUI_SU_GROQ_API_KEY"
+}

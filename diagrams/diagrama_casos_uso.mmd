@@ -1,0 +1,36 @@
+flowchart TB
+    Admin((Administrador))
+    Gestor((Gestor del conocimiento))
+    Tutor((Tutor / Docente))
+    Estudiante((Estudiante / Aprendiz))
+
+    UC1[Iniciar sesión]
+    UC2[Ver dashboard]
+    UC3[Gestionar usuarios]
+    UC4[Cargar documentos]
+    UC5[Clasificar conocimiento]
+    UC6[Consultar tutor IA]
+    UC7[Revisar historial]
+    UC8[Ver auditoría]
+    UC9[Consultar arquitectura]
+
+    Admin --> UC1
+    Admin --> UC2
+    Admin --> UC3
+    Admin --> UC4
+    Admin --> UC8
+    Admin --> UC9
+    Gestor --> UC1
+    Gestor --> UC2
+    Gestor --> UC4
+    Gestor --> UC5
+    Gestor --> UC6
+    Tutor --> UC1
+    Tutor --> UC2
+    Tutor --> UC4
+    Tutor --> UC6
+    Tutor --> UC7
+    Estudiante --> UC1
+    Estudiante --> UC2
+    Estudiante --> UC6
+    Estudiante --> UC7

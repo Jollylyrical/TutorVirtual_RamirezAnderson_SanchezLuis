@@ -1,0 +1,54 @@
+### Health check
+GET http://127.0.0.1:8000/api/health/
+
+### Registro con rol
+POST http://127.0.0.1:8000/api/auth/register/
+Content-Type: application/json
+
+{
+  "username": "estudiante_api",
+  "email": "estudiante_api@correo.com",
+  "first_name": "Estudiante",
+  "last_name": "API",
+  "password": "ClaveSegura123*",
+  "role": "student"
+}
+
+### Token JWT
+POST http://127.0.0.1:8000/api/auth/token/
+Content-Type: application/json
+
+{
+  "username": "estudiante_demo",
+  "password": "Estudiante12345*"
+}
+
+### Crear documento
+POST http://127.0.0.1:8000/api/knowledge/documents/
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+{
+  "title": "Manual de gestión del conocimiento",
+  "category": "institutional",
+  "source": "Documento institucional",
+  "content": "La gestión del conocimiento consiste en capturar, organizar, compartir y aplicar el conocimiento institucional para mejorar la toma de decisiones.",
+  "tags": "gestión, conocimiento, institucional"
+}
+
+### Buscar documento / fragmentos
+GET http://127.0.0.1:8000/api/knowledge/documents/search/?q=conocimiento
+Authorization: Bearer {{access_token}}
+
+### Preguntar al tutor
+POST http://127.0.0.1:8000/api/ai/ask/
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+{
+  "question": "¿Qué es gestión del conocimiento?"
+}
+
+### Historial
+GET http://127.0.0.1:8000/api/ai/history/
+Authorization: Bearer {{access_token}}
