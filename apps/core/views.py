@@ -31,12 +31,13 @@ ROLE_DASHBOARDS = {
     UserProfile.Role.STUDENT: 'core/dashboard_student.html',
 }
 
-
 def _role(user) -> str:
     if user.is_superuser:
         return UserProfile.Role.ADMIN
-    return get_or_create_profile(user).role
-
+    try:
+        return get_or_create_profile(user).role
+    except Exception:
+        return UserProfile.Role.STUDENT
 
 def _role_display(user) -> str:
     if user.is_superuser:
