@@ -167,3 +167,23 @@ X_FRAME_OPTIONS = 'DENY'
 LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'dashboard'
 LOGOUT_REDIRECT_URL = 'home'
+
+# Simple console logging so production hosts (Render/Gunicorn) include
+# Django request tracebacks in their logs. This helps debug 500 errors
+# without enabling DEBUG=True.
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django.request': {
+            'handlers': ['console'],
+            'level': 'ERROR',
+            'propagate': True,
+        },
+    },
+}
