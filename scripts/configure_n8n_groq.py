@@ -53,7 +53,9 @@ updates = {
 if key:
     updates['GROQ_API_KEY'] = key
 elif 'GROQ_API_KEY' not in env:
-    updates['GROQ_API_KEY'] = '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'
+    # Do not hardcode API keys in source. Ask user to set it in .env instead.
+    # Use a placeholder so push protection won't flag this repository.
+    updates['GROQ_API_KEY'] = 'REPLACE_WITH_GROQ_API_KEY'
 
 write_env(updates)
 print('\nConfiguración guardada en:', ENV_PATH)
